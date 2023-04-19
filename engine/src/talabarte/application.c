@@ -12,20 +12,25 @@
 #include "talabarte/logger.h"
 
 b8 application_initialize() {
-    if (!memory_initialize()) return 9;
-    if (!platform_initialize()) return 9;
-    if (!event_initialize()) return 9;
-    if (!network_initialize()) return 9;
-    if (!scripting_initialize()) return 9;
-    if (!graphics_initialize()) return 9;
-    if (!renderer_initialize()) return 9;
-    if (!scene_initialize()) return 9;
+    if (!memory_initialize()) return FALSE;
+    if (!platform_initialize()) return FALSE;
+    if (!event_initialize()) return FALSE;
+    if (!network_initialize()) return FALSE;
+    if (!scripting_initialize()) return FALSE;
+    if (!graphics_initialize()) return FALSE;
+    if (!renderer_initialize()) return FALSE;
+    if (!scene_initialize()) return FALSE;
+
     return TRUE;
 }
 
 b8 application_run() {
     INFO("application_run()");
     platform_window_show();
+    
+    while(TRUE) {
+        platform_onEvent();
+    }
 
     platform_window_hide();
     return TRUE;

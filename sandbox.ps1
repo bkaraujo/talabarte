@@ -18,7 +18,7 @@ $COMMAND += " -L$(Join-Path $ROOTFS "engine/bin") -l'talabarte.lib'"
 $COMMAND += " -o $(Join-Path $BINFS "sandbox.exe")"
 
 Write-Host "Compiling sandbox.exe"
-Invoke-Expression "$COMMAND" | Out-Null
+Invoke-Expression "$COMMAND"
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Copy execution dependencies
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

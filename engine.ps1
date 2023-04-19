@@ -19,4 +19,4 @@ $COMMAND += " -luser32"
 $COMMAND += " -o $(Join-Path $BINFS "talabarte.dll")"
 
 Write-Host "Compiling talabarte.dll"
-Invoke-Expression "$COMMAND" | Out-Null
+Invoke-Expression "$COMMAND"

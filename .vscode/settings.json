@@ -59,7 +59,8 @@
         "iterator": "c",
         "string_view": "c",
         "type_traits": "c",
-        "initializer_list": "c"
+        "initializer_list": "c",
+        "xiosbase": "c"
     },
     // File copyright documentation tag.  Array of strings will be converted to one line per element.  Can template {year}.
     "doxdocgen.file.copyrightTag": [
