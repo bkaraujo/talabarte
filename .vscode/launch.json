@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch TestBed",
+            "type": "cppdbg",
+            "request": "launch",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/sandbox/bin",
+            "environment": [],
+            "program": "${workspaceFolder}/sandbox/bin/sandbox.exe",
+            "windows": {
+                "name": "Launch",
+                "request": "launch",
+                "type": "cppvsdbg",
+                "program": "${workspaceFolder}/sandbox/bin/sandbox.exe",
+                // cppvsdbg requires this instead of externalConsole
+                "console": "integratedTerminal",
+                "stopAtConnect": true
+            }
+        }
+    ]
+}
