@@ -1,5 +1,5 @@
-#ifndef TALABARTE_EVENT
-#define TALABARTE_EVENT
+#ifndef TALABARTE_CORE_EVENT
+#define TALABARTE_CORE_EVENT
 #include "talabarte/types.h"
 
 b8 event_initialize();

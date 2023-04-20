@@ -1,5 +1,5 @@
-#ifndef TALABARTE_SCENE
-#define TALABARTE_SCENE
+#ifndef TALABARTE_CORE_SCENE
+#define TALABARTE_CORE_SCENE
 #include "talabarte/types.h"
 
 b8 scene_initialize();
