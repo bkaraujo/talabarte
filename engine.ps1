@@ -11,7 +11,7 @@ New-Item $BINFS -ItemType Directory | Out-Null
 # Compile library
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 $COMMAND = "C:\'Program Files'\LLVM\bin\clang.exe"
-$COMMAND += " -g -shared -Wall -Werror -Wno-incompatible-pointer-types" 
+$COMMAND += " -g -shared -Wall -Werror" 
 $COMMAND += " -DEXPORT -DUNICODE -D_UNICODE"
 $COMMAND += " $(Get-ChildItem -Path $SRCFS -Recurse -Include *.c)"
 $COMMAND += " -I$SRCFS"
