@@ -1,7 +1,7 @@
 #ifndef TALABARTE_LOGGER
 #define TALABARTE_LOGGER
+#include "talabarte/core/platform/console.h"
 #include "talabarte/types.h"
-#include "talabarte/platform/console.h"
 
 API void logger_log(u8 level, const char* message, ...);
 

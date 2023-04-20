@@ -1,6 +1,8 @@
 #ifndef TALABARTE_TYPES
 #define TALABARTE_TYPES
 
+#include <stddef.h>
+
 #ifdef EXPORT
     #if _MSC_VER
         #define API __declspec(dllexport)
@@ -49,5 +51,17 @@ typedef struct {
 #define KiB(bytes) (f32) (bytes / 1024.0)
 #define MiB(kib) (f32) (kib / 1024.0)
 #define GiB(mib) (f32) (mib / 1024.0)
+
+enum AspectRatio { ASPECT_RATIO_4x3, ASPECT_RATIO_16x9, ASPECT_RATIO_21x9 };
+enum Resolution { RESOLUTION_HD, RESOLUTION_FHD, RESOLUTION_QHD, RESOLUTION_UHD };
+
+struct Game {
+    struct {
+        const char* title;
+        enum Resolution resolution;
+        enum AspectRatio aspectRatio;
+        b8 maximized;
+    } Window;
+};
 
 #endif

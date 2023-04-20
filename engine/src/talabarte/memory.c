@@ -1,4 +1,4 @@
-#include "talabarte/platform/memory.h"
+#include "talabarte/core/platform/memory.h"
 #include "talabarte/memory.h"
 #include "talabarte/logger.h"
 

@@ -12,6 +12,7 @@ New-Item $BINFS -ItemType Directory | Out-Null
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 $COMMAND = "C:\'Program Files'\LLVM\bin\clang.exe"
 $COMMAND += " -g -Wall -Werror"
+$COMMAND += " -DUNICODE -D_UNICODE"
 $COMMAND += " $(Get-ChildItem -Path $SRCFS -Recurse -Include *.c)"
 $COMMAND += " -I$SRCFS -I$(Join-Path $ROOTFS "engine/src")"
 $COMMAND += " -L$(Join-Path $ROOTFS "engine/bin") -l'talabarte.lib'"

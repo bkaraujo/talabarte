@@ -1,6 +1,6 @@
 {
     "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-    "editor.minimap.enabled": false,
+    "editor.minimap.enabled": true,
     "terminal.integrated.shell.windows": "c:/Program Files/PowerShell/7/pwsh.exe",
     "terminal.integrated.fontWeight": "1",
     "editor.fontSize": 14,
@@ -60,7 +60,8 @@
         "string_view": "c",
         "type_traits": "c",
         "initializer_list": "c",
-        "xiosbase": "c"
+        "xiosbase": "c",
+        "system_error": "c"
     },
     // File copyright documentation tag.  Array of strings will be converted to one line per element.  Can template {year}.
     "doxdocgen.file.copyrightTag": [

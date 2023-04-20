@@ -1,11 +1,24 @@
 #ifndef TALABARTE_ENTRY
 #define TALABARTE_ENTRY
-#include "application.h"
+#include "talabarte/core/application.h"
+#include "talabarte/types.h"
+
+b8 game_configure(struct Game* game);
 
 int main(void) {
-    if (!application_initialize()) return 9;
+    struct Game game;
+
+    game.Window.title = "Talabarte Game";
+    game.Window.maximized = FALSE;
+    game.Window.resolution = RESOLUTION_HD;
+    game.Window.aspectRatio = ASPECT_RATIO_16x9;
+
+    if (!game_configure(&game)) return 1;
+    
+    if (!application_initialize(&game)) return 2;
     if (!application_run()) return 9;
     application_terminate();
+    
     return 0;
 }
 

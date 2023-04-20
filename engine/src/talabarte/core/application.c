@@ -1,17 +1,20 @@
-#include "talabarte/application.h"
+#include "talabarte/core/application.h"
 
-#include "talabarte/platform/lifecycle.h"
-#include "talabarte/platform/window.h"
-#include "talabarte/event/lifecycle.h"
-#include "talabarte/network/lifecycle.h"
-#include "talabarte/scripting/lifecycle.h"
-#include "talabarte/graphics/lifecycle.h"
-#include "talabarte/renderer/lifecycle.h"
-#include "talabarte/scene/lifecycle.h"
+#include "talabarte/core/runtime.h"
+#include "talabarte/core/platform/lifecycle.h"
+#include "talabarte/core/platform/window.h"
+#include "talabarte/core/event/lifecycle.h"
+#include "talabarte/core/network/lifecycle.h"
+#include "talabarte/core/scripting/lifecycle.h"
+#include "talabarte/core/graphics/lifecycle.h"
+#include "talabarte/core/renderer/lifecycle.h"
+#include "talabarte/core/scene/lifecycle.h"
 #include "talabarte/memory.h"
 #include "talabarte/logger.h"
 
-b8 application_initialize() {
+b8 application_initialize(struct Game* game) {
+    runtime_get()->Game = game;
+    
     if (!memory_initialize()) return FALSE;
     if (!platform_initialize()) return FALSE;
     if (!event_initialize()) return FALSE;

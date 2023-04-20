@@ -1,7 +1,7 @@
-#include "talabarte/logger.h"
+#include "talabarte/core/platform/time.h"
+#include "talabarte/core/platform/console.h"
 #include "talabarte/memory.h"
-#include "talabarte/platform/time.h"
-#include "talabarte/platform/console.h"
+#include "talabarte/logger.h"
 
 #include <stdio.h>
 #include <stdarg.h>
