@@ -4,6 +4,6 @@
 #include "talabarte/types.h"
 
 
-b8 application_event_quit(struct Event* event);
+void application_event_quit(struct Event* event);
 
 #endif

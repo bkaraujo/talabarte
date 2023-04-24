@@ -17,10 +17,13 @@ void event_register(enum EventCode code, event_handler* handler) {
 }
 
 void event_fire(struct Event* event) {
+    if (event->handled) return;
+    
     Node* current = registry[event->code];
     while (current->next != NULL) {
         current = current->next;
         ((event_handler*) current->payload)(event);
+        if (event->handled) break;
     }
 }
 
