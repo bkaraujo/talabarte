@@ -7,6 +7,8 @@ void memory_terminate();
 
 enum MemoryTag {
     MEMORY_TAG_STRING,
+    MEMORY_TAG_LIST_HEAD,
+    MEMORY_TAG_LIST_NODE,
     MEMORY_TAG_MAXIMUM
 };
 

@@ -64,4 +64,42 @@ struct Game {
     } Window;
 };
 
+enum EventCode {
+    EVENT_APPLICATION_QUIT,
+
+    EVENT_WINDOW_ICONIFIED,
+    EVENT_WINDOW_MAXIMIZED,
+    EVENT_WINDOW_RESIZED,
+
+    EVENT_KEY_PRESSED,
+    EVENT_KEY_RELEASED,
+
+    EVENT_MOUSE_BUTTON_PRESSED,
+    EVENT_MOUSE_BUTTON_RELEASED,
+    EVENT_MOUSE_MOVED,
+    EVENT_MOUSE_SCROLLED,
+
+    EVENT_MAXIMUM  
+};
+
+struct Event {
+    enum EventCode code;
+    b8 handled;
+    union {
+        i64 i64[2];
+        u64 u64[2];
+        f64 f64[2];
+
+        i32 i32[4];
+        u32 u32[4];
+        f32 f32[4];
+
+        i16 i16[8];
+        u16 u16[8];
+
+        i8 i8[16];
+        u8 u8[16];
+        char c[16];
+    } payload;
+};
 #endif

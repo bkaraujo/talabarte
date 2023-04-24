@@ -1,5 +1,5 @@
-#ifndef TALABARTE_APPLICATION
-#define TALABARTE_APPLICATION
+#ifndef TALABARTE_CORE_APPLICATION
+#define TALABARTE_CORE_APPLICATION
 #include "talabarte/types.h"
 
 API b8 application_initialize(struct Game* game);

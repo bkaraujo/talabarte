@@ -11,6 +11,7 @@
 #include "talabarte/core/platform/memory.h"
 #include "talabarte/core/platform/time.h"
 #include "talabarte/logger.h"
+#include "talabarte/event.h"
 
 b8 platform_initialize_memory(void);
 b8 platform_initialize_console(void);
@@ -27,6 +28,7 @@ b8 platform_initialize() {
 void platform_terminate_memory(void);
 void platform_terminate_console(void);
 void platform_terminate_window(void);
+
 void platform_terminate() {
     platform_terminate_window();
     platform_terminate_console();
@@ -49,13 +51,15 @@ b8 platform_initialize_console(void) {
 }
 
 void platform_stdout(const char* message, u8 colour) {
-    SetConsoleTextAttribute(m_hconsole, COLORS[colour]);
-
     i32 length = strlen(message);
-    u16 unicode[length];
-    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, message, -1, unicode, length);
+    i32 needed = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, message, length, NULL, 0);
     
+    u16 unicode[needed];
+    i32 written = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, message, length, unicode, needed);
+    if (needed != written) { OutputDebugString(TEXT("MultiByteToWideChar needed != written")); }
+
     DWORD lpNumberOfCharsWritten = 0;
+    SetConsoleTextAttribute(m_hconsole, COLORS[colour]);
     WriteConsole(m_hconsole, unicode, length, &lpNumberOfCharsWritten, 0);
     SetConsoleTextAttribute(m_hconsole, m_csbi.wAttributes);
 }
@@ -235,14 +239,15 @@ b8 window_create(struct Runtime* runtime) {
 }
 
 void window_center(struct Runtime* runtime) {
-    i32 screenWidth = GetSystemMetrics(SM_CXSCREEN);
-    i32 screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    runtime->Platform.Monitor.width = GetSystemMetrics(SM_CXSCREEN);
+    runtime->Platform.Monitor.height = GetSystemMetrics(SM_CYSCREEN);
     SetWindowPos(
         m_window, 
-        HWND_TOP, // Bring the window to the top of non-modals
-        (screenWidth - runtime->Platform.Window.width) / 2, (screenHeight - runtime->Platform.Window.height) / 2, 
-        0, 0, 
-        SWP_NOSIZE // Do not resize while moving
+        HWND_TOP,                                                                   // Bring the window to the top of non-modals
+        (runtime->Platform.Monitor.width - runtime->Platform.Window.width) / 2,     // X
+        (runtime->Platform.Monitor.height - runtime->Platform.Window.height) / 2,   // Y
+        0, 0,                                                                       // width, height
+        SWP_NOSIZE                                                                  // Do not resize while moving
         );
 }
 
@@ -268,7 +273,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
         // handled by the application to prevent flicker.
         case WM_ERASEBKGND: return 1; 
-        case WM_CLOSE: return 0;
+        case WM_CLOSE: { 
+            struct Event event = {EVENT_APPLICATION_QUIT};
+            event_fire(&event);
+            return 0;
+        } break;
         case WM_DESTROY: PostQuitMessage(0); return 0;
         case WM_SIZE: {
             // Get the updated size.
@@ -277,7 +286,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
             // u32 width = r.right - r.left;
             // u32 height = r.bottom - r.top;
 
-            // TODO: Fire an event for window resize.
+            // TODO: Event for window resize.
         } break;
         case WM_KEYDOWN:
         case WM_SYSKEYDOWN:
@@ -285,21 +294,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
         case WM_SYSKEYUP: {
             // Key pressed/released
             //b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
-            // TODO: input processing
+            // TODO: Event for keyboard input
 
         } break;
         case WM_MOUSEMOVE: {
             // Mouse move
             //i32 x_position = GET_X_LPARAM(l_param);
             //i32 y_position = GET_Y_LPARAM(l_param);
-            // TODO: input processing.
+            // TODO: Event for mouse move
         } break;
         case WM_MOUSEWHEEL: {
             // i32 z_delta = GET_WHEEL_DELTA_WPARAM(w_param);
             // if (z_delta != 0) {
             //     // Flatten the input to an OS-independent (-1, 1)
             //     z_delta = (z_delta < 0) ? -1 : 1;
-            //     // TODO: input processing.
+            //     // TODO: Event for mouse scroll
             // }
         } break;
         case WM_LBUTTONDOWN:
@@ -309,7 +318,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
         case WM_MBUTTONUP:
         case WM_RBUTTONUP: {
             //b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN;
-            // TODO: input processing.
+            // TODO: Event for mouse button
         } break;
     }
     

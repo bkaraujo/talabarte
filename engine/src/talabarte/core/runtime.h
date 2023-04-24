@@ -3,7 +3,12 @@
 #include "talabarte/types.h"
 
 struct Runtime {
+    b8 running;
     struct {
+        struct {
+            i32 width;
+            i32 height;
+        } Monitor;
         struct {
             const char* title;
             i32 width;
