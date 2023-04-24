@@ -1,5 +1,5 @@
-#ifndef TALABARTE_PLATFORM_TIME
-#define TALABARTE_PLATFORM_TIME
+#ifndef TALABARTE_CORE_PLATFORM_TIME
+#define TALABARTE_CORE_PLATFORM_TIME
 #include "talabarte/types.h"
 
 LocalTime platform_time_now(void);

@@ -1,5 +1,5 @@
-#ifndef TALABARTE_RUNTIME
-#define TALABARTE_RUNTIME
+#ifndef TALABARTE_CORE_RUNTIME
+#define TALABARTE_CORE_RUNTIME
 #include "talabarte/types.h"
 
 struct Runtime {

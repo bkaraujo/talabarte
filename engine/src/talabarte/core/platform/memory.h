@@ -1,5 +1,5 @@
-#ifndef TALABARTE_PLATFORM_MEMORY
-#define TALABARTE_PLATFORM_MEMORY
+#ifndef TALABARTE_CORE_PLATFORM_MEMORY
+#define TALABARTE_CORE_PLATFORM_MEMORY
 #include "talabarte/types.h"
 
 void  platform_memory_free(void* block);
