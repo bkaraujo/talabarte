@@ -8,7 +8,7 @@
                 "${workspaceFolder}/sandbox/src/**",
                 "C:/Program Files/VulkanSDK/1.3.243.0/include"
             ],
-            "defines": [ "EXPORT", "UNICODE", "_UNICODE" ],
+            "defines": [ "EXPORT", "UNICODE", "_UNICODE", "CGLM_STATIC" ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "C:/Program Files/LLVM/bin/clang.exe",
             "cStandard": "c17",

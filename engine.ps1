@@ -12,7 +12,7 @@ New-Item $BINFS -ItemType Directory | Out-Null
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 $COMMAND = "C:\'Program Files'\LLVM\bin\clang.exe -std=c17"
 $COMMAND += " -o0 -g -shared -Wall -Werror" 
-$COMMAND += " -DEXPORT -DUNICODE -D_UNICODE"
+$COMMAND += " -DEXPORT -DUNICODE -D_UNICODE -DCGLM_STATIC"
 $COMMAND += " $(Get-ChildItem -Path $SRCFS -Recurse -Include *.c)"
 $COMMAND += " -I$SRCFS"
 $COMMAND += " -luser32"
