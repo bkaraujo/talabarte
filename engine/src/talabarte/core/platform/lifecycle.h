@@ -3,7 +3,7 @@
 #include "talabarte/types.h"
 
 b8 platform_initialize();
-b8 platform_onEvent();
+b8 platform_update();
 void platform_terminate();
 
 #endif

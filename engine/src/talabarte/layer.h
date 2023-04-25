@@ -9,6 +9,6 @@ struct Layer {
     void (*onGui)(f32 delta);
 };
 
-void layer_add(struct Layer* layer);
+API void layer_add(struct Layer* layer);
 
 #endif

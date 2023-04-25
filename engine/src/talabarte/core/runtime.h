@@ -1,21 +1,37 @@
 #ifndef TALABARTE_CORE_RUNTIME
 #define TALABARTE_CORE_RUNTIME
 #include "talabarte/types.h"
+#include "cglm/struct.h"
 
 struct Runtime {
+    // Indicates that the application is still running
     b8 running;
+
     struct {
+        // Primary monitor information
         struct {
             i32 width;
             i32 height;
         } Monitor;
+        
+        // Window informations
         struct {
             const char* title;
             i32 width;
             i32 height;
         } Window;
-        struct { } Keyboard;
-        struct { } Mouse;
+
+        // Mouse current state
+        struct {
+            ivec2s position;
+            b8 pressed[TALABARTE_BUTTON_MAXIMUM];
+        } Mouse;
+
+        // Keyboard current state
+        struct {
+            b8 pressed[TALABARTE_KEY_MAXIMUM];
+        } Keyboard;
+
     } Platform;
     struct Game* Game;
 };
