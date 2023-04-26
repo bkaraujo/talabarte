@@ -12,7 +12,7 @@ b8 memory_initialize() {
 
 void memory_terminate() {
     if (registry.total == 0) return;
-    FATAL("Memory Leak: %u %0.10f MiB", registry.total, MiB(KiB(registry.total)))
+    TFATAL("Memory Leak: %u %0.10f MiB", registry.total, MiB(KiB(registry.total)));
 }
 
 const char* translate(enum MemoryTag tag) {

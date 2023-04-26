@@ -19,12 +19,15 @@ struct Runtime {
             const char* title;
             i32 width;
             i32 height;
+            b8 iconified;
+            b8 maximized;
         } Window;
 
         // Mouse current state
         struct {
             ivec2s position;
             b8 pressed[TALABARTE_BUTTON_MAXIMUM];
+            i32 scroll;
         } Mouse;
 
         // Keyboard current state

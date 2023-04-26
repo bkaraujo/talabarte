@@ -8,7 +8,6 @@
 #include "talabarte/core/event/lifecycle.h"
 #include "talabarte/core/layer/lifecycle.h"
 #include "talabarte/memory.h"
-#include "talabarte/logger.h"
 #include "talabarte/event.h"
 #include "talabarte/input.h"
 
@@ -25,6 +24,10 @@ b8 application_initialize(struct Game* game) {
     if (!layer_initialize()) return FALSE;
 
     event_register(EVENT_APPLICATION_QUIT, application_event_quit);
+    
+    event_register(EVENT_WINDOW_RESIZED, application_event_window_resized);
+    event_register(EVENT_WINDOW_ICONIFIED, application_event_window_iconified);
+    event_register(EVENT_WINDOW_MAXIMIZED, application_event_window_maximized);
 
     return TRUE;
 }
@@ -35,20 +38,22 @@ b8 application_run() {
     platform_window_show();
     
     while(runtime->running) {
-        application_update();
+        if (runtime->Platform.Window.iconified) {
+            platform_update();
+            continue;
+        }
+        
+        if (input_key_pressed(TALABARTE_KEY_ESCAPE)) runtime->running = FALSE;
+
         layer_onUpdate(0);
         layer_onGui(0);
+
+        platform_update();
+        input_update();
     }
 
     platform_window_hide();
     return TRUE;
-}
-
-void application_update() {
-    platform_update();
-    input_update();
-
-    if (input_key_pressed(TALABARTE_KEY_ESCAPE)) runtime->running = FALSE;
 }
 
 void application_terminate() {

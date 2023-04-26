@@ -1,7 +1,6 @@
 #include "talabarte/core/event/lifecycle.h"
 #include "talabarte/container/list.h"
 #include "talabarte/event.h"
-#include "talabarte/logger.h"
 #include "talabarte/memory.h"
 
 static Node* registry[EVENT_MAXIMUM];

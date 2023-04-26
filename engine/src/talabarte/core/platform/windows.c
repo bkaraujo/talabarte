@@ -21,6 +21,11 @@ b8 platform_initialize_window(void);
 b8 platform_initialize() {
     if (!platform_initialize_memory()) return FALSE;
     if (!platform_initialize_console()) return FALSE;
+
+    struct Runtime* runtime = runtime_get();
+    runtime->Platform.Monitor.width = GetSystemMetrics(SM_CXSCREEN);
+    runtime->Platform.Monitor.height = GetSystemMetrics(SM_CYSCREEN);
+
     if (!platform_initialize_window()) return FALSE;
 
     return TRUE;
@@ -151,9 +156,6 @@ b8 platform_initialize_window() {
     m_hinstance = GetModuleHandle(0);
     struct Runtime* runtime = runtime_get();
 
-    runtime->Platform.Monitor.width = GetSystemMetrics(SM_CXSCREEN);
-    runtime->Platform.Monitor.height = GetSystemMetrics(SM_CYSCREEN);
-
     if (!window_register_class()) return FALSE;
     if (!window_compute_size(runtime)) return FALSE;
     if (!window_create(runtime)) return FALSE;
@@ -183,7 +185,10 @@ b8 window_register_class(void) {
     wc.hbrBackground = NULL;                   // Transparent
     wc.lpszClassName = L"talabarte_window_class";
 
-    if (!RegisterClass(&wc)) { FATAL("RegisterClass(...): 0x%x", GetLastError()) return FALSE; }
+    if (!RegisterClass(&wc)) { 
+        TFATAL("RegisterClass(...): 0x%x", GetLastError());
+        return FALSE;
+    }
     return TRUE;
 }
 
@@ -237,7 +242,11 @@ b8 window_create(struct Runtime* runtime) {
         0, 
         m_hinstance, 0);
 
-    if (m_window == 0) { FATAL("CreateWindowEx(...): 0x%x", GetLastError()) return FALSE; }
+    if (m_window == 0) { 
+        TFATAL("CreateWindowEx(...): 0x%x", GetLastError()) ;
+        return FALSE;
+    }
+
     return TRUE;
 }
 
@@ -279,32 +288,47 @@ b8 platform_update() {
     return TRUE;
 }
 
+BOOL CALLBACK MyInfoEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
+    MONITORINFO info; GetMonitorInfo(hMonitor, &info);
+    
+    TINFO("info.rcWork: %i, %i", info.rcWork.right - info.rcWork.left, info.rcWork.bottom - info.rcWork.top);
+    TINFO("info.rcMonitor: %i, %i", info.rcMonitor.right - info.rcMonitor.left, info.rcMonitor.bottom - info.rcMonitor.top);
+
+    return TRUE;
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
         // handled by the application to prevent flicker.
         case WM_ERASEBKGND: return 1; 
+        case WM_USERCHANGED:
         case WM_CLOSE: { 
             struct Event event = {EVENT_APPLICATION_QUIT};
             event_fire(&event);
             return 0;
         } break;
         case WM_DESTROY: PostQuitMessage(0); return 0;
-        case WM_SIZE: {
-            // Get the updated size.
-            // RECT r;
-            // GetClientRect(hwnd, &r);
-            // u32 width = r.right - r.left;
-            // u32 height = r.bottom - r.top;
 
-            // TODO: Event for window resize.
+        case WM_SIZE: {
+            struct Event event;
+
+            switch (wParam) {
+                case SIZE_RESTORED : event.code = EVENT_WINDOW_RESIZED  ; break;
+                case SIZE_MAXIMIZED: event.code = EVENT_WINDOW_MAXIMIZED; break;
+                case SIZE_MINIMIZED: event.code = EVENT_WINDOW_ICONIFIED; break;
+            }
+
+            event.payload.u32[0] = LOWORD(lParam);
+            event.payload.u32[1] = HIWORD(lParam);
+            event_fire(&event);
         } break;
        
         case WM_KEYDOWN:
         case WM_SYSKEYDOWN:
         case WM_KEYUP:
         case WM_SYSKEYUP: {
-            struct Event event = {message == WM_KEYDOWN || message == WM_SYSKEYDOWN ? EVENT_KEY_PRESSED : EVENT_KEY_RELEASED};
-            event.payload.u16[0] = platform_input_key(wParam);
+            struct Event event = { message == WM_KEYDOWN || message == WM_SYSKEYDOWN ? EVENT_KEY_PRESSED : EVENT_KEY_RELEASED };
+            event.payload.u16[0] = wParam;
             event_fire(&event);
         } break;
 
@@ -332,7 +356,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
         case WM_LBUTTONUP:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP: {
-            struct Event event = {WM_LBUTTONDOWN || message == WM_RBUTTONDOWN || message == WM_MBUTTONDOWN ? EVENT_MOUSE_PRESSED : EVENT_MOUSE_RELEASED};
+            struct Event event = { WM_LBUTTONDOWN || message == WM_RBUTTONDOWN || message == WM_MBUTTONDOWN ? EVENT_MOUSE_PRESSED : EVENT_MOUSE_RELEASED };
 
             switch (message) {
                 case WM_LBUTTONDOWN:
@@ -357,95 +381,3 @@ LRESULT CALLBACK WndProc(HWND hwnd, u32 message, WPARAM wParam, LPARAM lParam) {
 }
 
 #endif
-// ##############################################################################
-// input.h
-// ##############################################################################
-
-// https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-enum TALABARTE_KEY platform_input_key(u16 hid) {
-    switch (hid) {
-        case VK_ESCAPE: return TALABARTE_KEY_ESCAPE;
-        case VK_F1: return TALABARTE_KEY_F1;
-        case VK_F2: return TALABARTE_KEY_F2;
-        case VK_F3: return TALABARTE_KEY_F3;
-        case VK_F4: return TALABARTE_KEY_F4;
-        case VK_F5: return TALABARTE_KEY_F5;
-        case VK_F6: return TALABARTE_KEY_F6;
-        case VK_F7: return TALABARTE_KEY_F7;
-        case VK_F8: return TALABARTE_KEY_F8;
-        case VK_F9: return TALABARTE_KEY_F9;
-        case VK_F10: return TALABARTE_KEY_F10;
-        case VK_F11: return TALABARTE_KEY_F11;
-        case VK_F12: return TALABARTE_KEY_F12;
-        case VK_F13: return TALABARTE_KEY_F13;
-        case VK_F14: return TALABARTE_KEY_F14;
-        case VK_F15: return TALABARTE_KEY_F15;
-        case VK_F16: return TALABARTE_KEY_F16;
-        case VK_F17: return TALABARTE_KEY_F17;
-        case VK_F18: return TALABARTE_KEY_F18;
-        case VK_F19: return TALABARTE_KEY_F19;
-        case VK_F20: return TALABARTE_KEY_F20;
-        case VK_F21: return TALABARTE_KEY_F21;
-        case VK_F22: return TALABARTE_KEY_F22;
-        case VK_F23: return TALABARTE_KEY_F23;
-        case VK_F24: return TALABARTE_KEY_F24;
-        case VK_PRINT: return TALABARTE_KEY_PRINT;
-        case VK_SCROLL: return TALABARTE_KEY_SCROLL_LOCK;
-        case VK_PAUSE: return TALABARTE_KEY_PAUSE;
-
-        case VK_OEM_3: return TALABARTE_KEY_OEM_3;
-        case 0x31: return TALABARTE_KEY_1;
-        case 0x32: return TALABARTE_KEY_2;
-        case 0x33: return TALABARTE_KEY_3;
-        case 0x34: return TALABARTE_KEY_4;
-        case 0x35: return TALABARTE_KEY_5;
-        case 0x36: return TALABARTE_KEY_6;
-        case 0x37: return TALABARTE_KEY_7;
-        case 0x38: return TALABARTE_KEY_8;
-        case 0x39: return TALABARTE_KEY_9;
-        case 0x30: return TALABARTE_KEY_0;
-        case VK_OEM_MINUS: return TALABARTE_KEY_OEM_MINUS;
-        case VK_OEM_PLUS: return TALABARTE_KEY_OEM_PLUS;
-        case VK_BACK: return TALABARTE_KEY_OEM_BACKSPACE;
-        case VK_INSERT: return TALABARTE_KEY_INSERT;
-        case VK_HOME: return TALABARTE_KEY_HOME;
-        case VK_PRIOR: return TALABARTE_KEY_PAGEUP;
-        
-        case VK_TAB: return TALABARTE_KEY_TAB;
-        case 0x51: return TALABARTE_KEY_Q;
-        case 0x57: return TALABARTE_KEY_W;
-        case 0x45: return TALABARTE_KEY_E;
-        case 0x52: return TALABARTE_KEY_R;
-        case 0x54: return TALABARTE_KEY_T;
-        case 0x59: return TALABARTE_KEY_Y;
-        case 0x55: return TALABARTE_KEY_U;
-        case 0x49: return TALABARTE_KEY_I;
-        case 0x4F: return TALABARTE_KEY_O;
-        case 0x50: return TALABARTE_KEY_P;
-        case VK_OEM_4: return TALABARTE_KEY_OEM_4;
-        case VK_OEM_5: return TALABARTE_KEY_OEM_5;
-        case VK_RETURN: return TALABARTE_KEY_RETURN;
-        case VK_DELETE: return TALABARTE_KEY_DELETE;
-        case VK_END: return TALABARTE_KEY_END;
-        case VK_NEXT: return TALABARTE_KEY_PAGEDOWN;
-
-        case 0x41: return TALABARTE_KEY_A;
-        case 0x42: return TALABARTE_KEY_B;
-        case 0x43: return TALABARTE_KEY_C;
-        case 0x44: return TALABARTE_KEY_D;
-        case 0x46: return TALABARTE_KEY_F;
-        case 0x47: return TALABARTE_KEY_G;
-        case 0x48: return TALABARTE_KEY_H;
-        case 0x4A: return TALABARTE_KEY_J;
-        case 0x4B: return TALABARTE_KEY_K;
-        case 0x4C: return TALABARTE_KEY_L;
-        case 0x4D: return TALABARTE_KEY_M;
-        case 0x4E: return TALABARTE_KEY_N;
-        case 0x53: return TALABARTE_KEY_S;
-        case 0x56: return TALABARTE_KEY_V;
-        case 0x58: return TALABARTE_KEY_X;
-        case 0x5A: return TALABARTE_KEY_Z;
-    }
-
-    return TALABARTE_KEY_MAXIMUM;
-}
