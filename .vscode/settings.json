@@ -61,7 +61,9 @@
         "type_traits": "c",
         "initializer_list": "c",
         "xiosbase": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "tuple": "c",
+        "utility": "c"
     },
     // File copyright documentation tag.  Array of strings will be converted to one line per element.  Can template {year}.
     "doxdocgen.file.copyrightTag": [

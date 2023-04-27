@@ -1,6 +1,6 @@
 $ROOTFS = $(Get-Location)
 $APPFS  = $(Join-Path $ROOTFS "engine")
-$SRCFS  = $(Join-Path $APPFS "src")
+$SRCFS  = $(Join-Path $APPFS "src/main")
 $BINFS  = $(Join-Path $APPFS "bin")
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Create bin folder
