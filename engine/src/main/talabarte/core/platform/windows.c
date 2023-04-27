@@ -9,7 +9,6 @@
 #include "talabarte/core/platform/lifecycle.h"
 #include "talabarte/core/platform/console.h"
 #include "talabarte/core/platform/memory.h"
-#include "talabarte/core/platform/input.h"
 #include "talabarte/core/platform/time.h"
 #include "talabarte/core/window/lifecycle.h"
 #include "talabarte/logger.h"
